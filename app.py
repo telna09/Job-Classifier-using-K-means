@@ -42,27 +42,27 @@ def load_model(model_path='models/job_classifier_20250525_044013.joblib'):
 def load_vectorizer():
     return TfidfVectorizer(stop_words='english', max_features=500)
 
-#def simulate_scrape_jobs(job_keyword):
-   # job_keyword = job_keyword.lower()
-   # sample_data = {
-      #  'data science': [
-          #  ('Data Scientist', 'Company A', 'Python, Machine Learning, SQL'),
-           # ('Data Analyst', 'Company B', 'SQL, Python, Tableau'),
-      #  ],
-      #  'ai': [
-        #    ('AI Engineer', 'Company C', 'AI, Deep Learning, Python'),
-         #   ('AI Researcher', 'Company D', 'NLP, AI, Python'),
-      #  ],
-        #'ml': [
-         #   ('ML Engineer', 'Company E', 'Python, Machine Learning, Scikit-learn'),
-          #  ('ML Ops Engineer', 'Company F', 'Docker, ML, DevOps'),
-      #  ]
-   # }
-  #  records = sample_data.get(job_keyword, [
-    #    ('Software Engineer', 'Company X', 'Java, Git, Agile'),
-      #  ('Backend Developer', 'Company Y', 'Node.js, MongoDB, Express')
-#    ])
-  #  return pd.DataFrame(records, columns=['title', 'company', 'skills'])
+def simulate_scrape_jobs(job_keyword):
+   job_keyword = job_keyword.lower()
+    sample_data = {
+       'data science': [
+           ('Data Scientist', 'Company A', 'Python, Machine Learning, SQL'),
+            ('Data Analyst', 'Company B', 'SQL, Python, Tableau'),
+        ],
+        'ai': [
+            ('AI Engineer', 'Company C', 'AI, Deep Learning, Python'),
+            ('AI Researcher', 'Company D', 'NLP, AI, Python'),
+        ],
+        'ml': [
+            ('ML Engineer', 'Company E', 'Python, Machine Learning, Scikit-learn'),
+            ('ML Ops Engineer', 'Company F', 'Docker, ML, DevOps'),
+       ]
+    }
+    records = sample_data.get(job_keyword, [
+       ('Software Engineer', 'Company X', 'Java, Git, Agile'),
+        ('Backend Developer', 'Company Y', 'Node.js, MongoDB, Express')
+    ])
+    return pd.DataFrame(records, columns=['title', 'company', 'skills'])
 
 # ------------------------
 # Page 1: Scrape Jobs
@@ -75,7 +75,7 @@ if page == "1️⃣ Scrape Jobs":
         if job_keyword.strip() == "":
             st.warning("Please enter a job type keyword.")
         else:
-            #jobs_df = simulate_scrape_jobs(job_keyword)
+            jobs_df = simulate_scrape_jobs(job_keyword)
             jobs_df.to_csv("processed_jobs_20250525_044013.csv", index=False)
             st.cache_data.clear()  # Clear to ensure reload
             st.success(f"Scraping complete for job type: {job_keyword}")
