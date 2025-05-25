@@ -104,7 +104,7 @@ elif page == "2️⃣ Cluster Jobs":
             jobs_df['Cluster'] = cluster_labels
             st.success("Jobs clustered successfully.")
             st.dataframe(jobs_df[['title', 'company', 'skills', 'Cluster']])
-            jobs_df.to_csv("clustered_jobs.csv", index=False)
+            jobs_df.to_csv("cprocessed_jobs_20250525_044013.csv", index=False)
 
 # ------------------------
 # Page 3: Match Skills
