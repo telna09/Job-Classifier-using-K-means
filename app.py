@@ -5,10 +5,7 @@ import numpy as np
 import joblib
 import json
 import os
-import requests
-from bs4 import BeautifulSoup
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.cluster import KMeans
 
 st.set_page_config(page_title="Job Classifier", layout="wide")
 
@@ -30,7 +27,7 @@ def load_user_preferences(path='user_preferences.json'):
     return {}
 
 @st.cache_data
-def load_jobs(file_path='raw_jobs_20250525_044013.csv'):
+def load_jobs(file_path='scraped_jobs.csv'):
     if os.path.exists(file_path):
         return pd.read_csv(file_path)
     return pd.DataFrame()
@@ -45,27 +42,44 @@ def load_model(model_path='models/job_classifier_20250525_044013.joblib'):
 def load_vectorizer():
     return TfidfVectorizer(stop_words='english', max_features=500)
 
-def scrape_karkidi_jobs():
-    st.info("Scraping Karkidi.com... (dummy data loaded for this demo)")
-    # Simulated data
-    return pd.DataFrame({
-        'title': ['Data Scientist', 'ML Engineer', 'AI Researcher'],
-        'company': ['Company A', 'Company B', 'Company C'],
-        'skills': ['Python, Machine Learning, SQL', 'Deep Learning, Python, NLP', 'AI, Python, Statistics']
-    })
+def simulate_scrape_jobs(job_keyword):
+    # Simulated data based on input keyword
+    job_keyword = job_keyword.lower()
+    sample_data = {
+        'data science': [
+            ('Data Scientist', 'Company A', 'Python, Machine Learning, SQL'),
+            ('Data Analyst', 'Company B', 'SQL, Python, Tableau'),
+        ],
+        'ai': [
+            ('AI Engineer', 'Company C', 'AI, Deep Learning, Python'),
+            ('AI Researcher', 'Company D', 'NLP, AI, Python'),
+        ],
+        'ml': [
+            ('ML Engineer', 'Company E', 'Python, Machine Learning, Scikit-learn'),
+            ('ML Ops Engineer', 'Company F', 'Docker, ML, DevOps'),
+        ]
+    }
+    records = sample_data.get(job_keyword, [
+        ('Software Engineer', 'Company X', 'Java, Git, Agile'),
+        ('Backend Developer', 'Company Y', 'Node.js, MongoDB, Express')
+    ])
+    return pd.DataFrame(records, columns=['title', 'company', 'skills'])
 
 # ------------------------
 # Page 1: Scrape Jobs
 # ------------------------
 if page == "1️⃣ Scrape Jobs":
     st.subheader("🕸️ Scrape Job Listings")
-    st.markdown("Fetch the latest jobs from [Karkidi.com](https://www.karkidi.com).")
+    job_keyword = st.text_input("Enter job type you're interested in (e.g., Data Science, AI, ML):", "")
 
     if st.button("Start Scraping"):
-        jobs_df = scrape_karkidi_jobs()
-        jobs_df.to_csv("scraped_jobs.csv", index=False)
-        st.success("Scraping complete. Preview below:")
-        st.dataframe(jobs_df)
+        if job_keyword.strip() == "":
+            st.warning("Please enter a job type keyword.")
+        else:
+            jobs_df = simulate_scrape_jobs(job_keyword)
+            jobs_df.to_csv("scraped_jobs.csv", index=False)
+            st.success(f"Scraping complete for job type: {job_keyword}")
+            st.dataframe(jobs_df)
 
 # ------------------------
 # Page 2: Cluster Jobs
