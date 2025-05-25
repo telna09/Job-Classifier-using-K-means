@@ -113,8 +113,8 @@ elif page == "3️⃣ Match My Skills":
     st.subheader("🎯 Find Jobs Based on Your Skills")
 
     jobs_df = load_jobs()
-    if os.path.exists("clustered_jobs.csv"):
-        jobs_df = pd.read_csv("clustered_jobs.csv")
+    if os.path.exists("processed_jobs_20250525_044013.csv"):
+        jobs_df = pd.read_csv("processed_jobs_20250525_044013.csv")
 
     if jobs_df.empty:
         st.warning("Please scrape and cluster job data first.")
