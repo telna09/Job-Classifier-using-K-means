@@ -27,7 +27,7 @@ def load_user_preferences(path='user_preferences.json'):
     return {}
 
 @st.cache_data
-def load_jobs(file_path='processed_jobs_20250525_044013.csv'):
+def load_jobs(file_path='scraped_jobs.csv'):
     if os.path.exists(file_path):
         return pd.read_csv(file_path)
     return pd.DataFrame()
@@ -43,10 +43,10 @@ def load_vectorizer():
     return TfidfVectorizer(stop_words='english', max_features=500)
 
 def simulate_scrape_jobs(job_keyword):
-   job_keyword = job_keyword.lower()
+    job_keyword = job_keyword.lower()
     sample_data = {
-       'data science': [
-           ('Data Scientist', 'Company A', 'Python, Machine Learning, SQL'),
+        'data science': [
+            ('Data Scientist', 'Company A', 'Python, Machine Learning, SQL'),
             ('Data Analyst', 'Company B', 'SQL, Python, Tableau'),
         ],
         'ai': [
@@ -56,10 +56,10 @@ def simulate_scrape_jobs(job_keyword):
         'ml': [
             ('ML Engineer', 'Company E', 'Python, Machine Learning, Scikit-learn'),
             ('ML Ops Engineer', 'Company F', 'Docker, ML, DevOps'),
-       ]
+        ]
     }
     records = sample_data.get(job_keyword, [
-       ('Software Engineer', 'Company X', 'Java, Git, Agile'),
+        ('Software Engineer', 'Company X', 'Java, Git, Agile'),
         ('Backend Developer', 'Company Y', 'Node.js, MongoDB, Express')
     ])
     return pd.DataFrame(records, columns=['title', 'company', 'skills'])
@@ -76,7 +76,7 @@ if page == "1️⃣ Scrape Jobs":
             st.warning("Please enter a job type keyword.")
         else:
             jobs_df = simulate_scrape_jobs(job_keyword)
-            jobs_df.to_csv("processed_jobs_20250525_044013.csv", index=False)
+            jobs_df.to_csv("scraped_jobs.csv", index=False)
             st.cache_data.clear()  # Clear to ensure reload
             st.success(f"Scraping complete for job type: {job_keyword}")
             st.dataframe(jobs_df)
@@ -104,7 +104,7 @@ elif page == "2️⃣ Cluster Jobs":
             jobs_df['Cluster'] = cluster_labels
             st.success("Jobs clustered successfully.")
             st.dataframe(jobs_df[['title', 'company', 'skills', 'Cluster']])
-            jobs_df.to_csv("cprocessed_jobs_20250525_044013.csv", index=False)
+            jobs_df.to_csv("clustered_jobs.csv", index=False)
 
 # ------------------------
 # Page 3: Match Skills
@@ -113,8 +113,8 @@ elif page == "3️⃣ Match My Skills":
     st.subheader("🎯 Find Jobs Based on Your Skills")
 
     jobs_df = load_jobs()
-    if os.path.exists("processed_jobs_20250525_044013.csv"):
-        jobs_df = pd.read_csv("processed_jobs_20250525_044013.csv")
+    if os.path.exists("clustered_jobs.csv"):
+        jobs_df = pd.read_csv("clustered_jobs.csv")
 
     if jobs_df.empty:
         st.warning("Please scrape and cluster job data first.")
