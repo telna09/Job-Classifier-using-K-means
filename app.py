@@ -43,7 +43,6 @@ def load_vectorizer():
     return TfidfVectorizer(stop_words='english', max_features=500)
 
 def simulate_scrape_jobs(job_keyword):
-    # Simulated data based on input keyword
     job_keyword = job_keyword.lower()
     sample_data = {
         'data science': [
@@ -78,6 +77,7 @@ if page == "1️⃣ Scrape Jobs":
         else:
             jobs_df = simulate_scrape_jobs(job_keyword)
             jobs_df.to_csv("scraped_jobs.csv", index=False)
+            st.cache_data.clear()  # Clear to ensure reload
             st.success(f"Scraping complete for job type: {job_keyword}")
             st.dataframe(jobs_df)
 
@@ -89,6 +89,10 @@ elif page == "2️⃣ Cluster Jobs":
     jobs_df = load_jobs()
     model = load_model()
     vectorizer = load_vectorizer()
+
+    if st.button("Refresh Data"):
+        st.cache_data.clear()
+        st.rerun()
 
     if jobs_df.empty or model is None:
         st.warning("Please scrape job data and ensure the trained model is available.")
