@@ -27,7 +27,7 @@ def load_user_preferences(path='user_preferences.json'):
     return {}
 
 @st.cache_data
-def load_jobs(file_path='scraped_jobs.csv'):
+def load_jobs(file_path='processed_jobs_20250525_044013.csv'):
     if os.path.exists(file_path):
         return pd.read_csv(file_path)
     return pd.DataFrame()
